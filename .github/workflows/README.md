@@ -10,5 +10,5 @@
 - Formatting
   -  `rustfmt` is the official  rust formatter.
   -  See the `rustfmt.toml` file  for config details.
--  Security
+- Security
   - `cargo audit` runs security vulnerabilities on crates daily. 
