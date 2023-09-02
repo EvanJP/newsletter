@@ -1,4 +1,4 @@
-name: Rust
+name: Main Workflow
 
 on: [push, pull_request]
 
@@ -81,7 +81,7 @@ jobs:
           # Specific to dtolnay/rust-toolchain: Comma-separated string of additional components to install
           components: rustfmt
       - name: Enforce formatting
-        run: cargo fmt --check
+        run: cargo +nightly fmt --check
 
   # `clippy` container job
   clippy:
