@@ -1,9 +1,8 @@
 use std::net::TcpListener;
 
-use sqlx::PgPool;
-
 use newsletter::configuration::get_configuration;
 use newsletter::startup::run;
+use sqlx::PgPool;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
