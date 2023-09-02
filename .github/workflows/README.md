@@ -9,6 +9,6 @@
   - `#[allow(clippy::lint_name)]`  will ignore clippy noises for a block.
 - Formatting
   -  `rustfmt` is the official  rust formatter.
-  -  See the `rustfmt.toml` file  for config details.
+  -  See the `rustfmt.toml` file  for config details. Nightly features are enabled here for formatting.
 - Security
   - `cargo deny` runs security vulnerabilities on crates daily. 
