@@ -1,13 +1,12 @@
 use std::net::TcpListener;
 
+use newsletter::configuration::get_configuration;
+use newsletter::configuration::DatabaseSettings;
 use sqlx::Connection;
 use sqlx::Executor;
 use sqlx::PgConnection;
 use sqlx::PgPool;
 use uuid::Uuid;
-
-use newsletter::configuration::get_configuration;
-use newsletter::configuration::DatabaseSettings;
 
 pub struct TestApp {
     pub address: String,

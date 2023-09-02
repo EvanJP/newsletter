@@ -3,7 +3,6 @@ use config::ConfigError;
 use config::File;
 use config::FileFormat;
 use serde::Deserialize;
-use sqlx::Database;
 
 #[derive(Deserialize)]
 pub struct Settings {
@@ -24,11 +23,7 @@ impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
         format!(
             "postgres://{}:{}@{}:{}/{}",
-            self.username,
-            self.password,
-            self.host,
-            self.port,
-            self.database_name
+            self.username, self.password, self.host, self.port, self.database_name
         )
     }
 

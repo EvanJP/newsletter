@@ -1,6 +1,5 @@
 use std::net::TcpListener;
 
-use sqlx::Connection;
 use sqlx::PgPool;
 
 use newsletter::configuration::get_configuration;
