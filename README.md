@@ -7,3 +7,8 @@
 * `./scripts/init_db.sh`
     - Starts up the Postgres docker container.
     - `docker stop <container_id>`
+
+## Env
+- If you want all logs for test cases:
+    - `TEST_LOG=true cargo test health_check_works`
+    - Can be piped to `bunyan`. 
