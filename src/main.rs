@@ -24,7 +24,8 @@ async fn main() -> std::io::Result<()> {
         .connect_lazy(config.database.connection_string().expose_secret())
         .unwrap();
     // .connect_lazy_with(config.database.connection_string().expose_secret());
-    let address = format!("127.0.0.1:{}", config.application_port);
+    let address =
+        format!("{}:{}", config.application.host, config.application.port);
     let listener = TcpListener::bind(address)?;
     run(listener, connection_pool)?.await
 }

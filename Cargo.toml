@@ -10,6 +10,19 @@ path = "src/lib.rs"
 path = "src/main.rs"
 name = "newsletter"
 
+[profile.release]
+# See https://github.com/johnthagen/min-sized-rust#strip-symbols-from-binary
+# remove symbols from .elf file.
+strip = true
+# 3 is performance, z is size.
+opt-level = 3
+# Linker optimization at link stage.
+lto = true
+# Default is 16 codegen units, but prevents optimizations.
+codegen-units = 1
+# Default is to unwind stack for backtrace. For prod, this is unnecessary.
+panic = "abort"
+
 [dependencies]
 actix-web = "4.3.1"
 chrono = { version = "0.4.26", default-features = false, features = ["clock"] }
