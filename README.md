@@ -11,4 +11,7 @@
 ## Env
 - If you want all logs for test cases:
     - `TEST_LOG=true cargo test health_check_works`
-    - Can be piped to `bunyan`. 
+    - Can be piped to `bunyan`.
+ 
+## To run SQLX on fly:
+- Proxy with `fly proxy 15432:5432 -a <pg name>` then psql into it.
