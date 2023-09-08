@@ -1,11 +1,10 @@
 # Latest as of 06/09/23.
 # cargo chef allows pre-building dependencies.
-FROM lukemathwalker/cargo-chef:latest-rust-1.72.0-slim as chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.72.0 as chef
 
-# FROM debian:bullseye-slim AS runtime
 WORKDIR /app
 
-RUN apt update && apt install lld clang -y
+RUN apt update && apt install lld clang openssl -y
 
 FROM chef as planner
 COPY . .
@@ -31,4 +30,5 @@ RUN apt-get update -y  \
 COPY --from=builder /app/target/release/newsletter newsletter
 COPY configuration configuration
 ENV APP_ENVIRONMENT production
+# 668fa28afd54
 ENTRYPOINT ["./newsletter"]

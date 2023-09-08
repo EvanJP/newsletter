@@ -10,22 +10,32 @@ primary_region = "ewr"
 # kill_timeout = 5
 
 [build]
-  dockerfile = "Dockerfile"
-  ignorefile = ".dockerignore"
+dockerfile = "Dockerfile"
+ignorefile = ".dockerignore"
 
 [http_service]
-  internal_port = 8080
-  force_https = true
+internal_port = 8000
+force_https = true
 
-  # Auto-start and stop should have the same value.
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ["app"]
+# Auto-start and stop should have the same value.
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
 
-[[http_service.checks]]
-    grace_period = "10s"
-    internal = "30s"
-    method = "GET"
-    timeout = "5s"
-    path = "/health_check"
+# [deploy]
+# release_command="./sqlx migrate run"
+
+# [[http_service.checks]]
+# grace_period = "10s"
+# internal = "30s"
+# method = "GET"
+# timeout = "5s"
+# path = "/health_check"
+
+[env]
+APP_DATABASE__DATABASE_NAME = "hidden_water_4767"
+APP_DATABASE__HOST = "weathered-night-4108.flycast"
+APP_DATABASE__PORT = "5432"
+APP_DATABASE__USERNAME = "hidden_water_4767"
+# APP_DATABASE__PASSWORD = "in `fly secret`"

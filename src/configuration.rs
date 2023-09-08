@@ -4,26 +4,56 @@ use config::File;
 use secrecy::ExposeSecret;
 use secrecy::Secret;
 use serde::Deserialize;
+use serde_aux::field_attributes::deserialize_number_from_string;
+use sqlx::postgres::PgConnectOptions;
+use sqlx::postgres::PgSslMode;
+use sqlx::ConnectOptions;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Settings {
     pub application: ApplicationSettings,
     pub database: DatabaseSettings,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct ApplicationSettings {
+    #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct DatabaseSettings {
     pub username: String,
     pub password: Secret<String>,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
     pub database_name: String,
+    pub require_ssl: bool,
+}
+
+impl DatabaseSettings {
+    pub fn without_db(&self) -> PgConnectOptions {
+        let ssl_mode = if self.require_ssl {
+            PgSslMode::Require
+        } else {
+            // Fallback to unencrypted if failed.
+            PgSslMode::Disable
+        };
+        PgConnectOptions::new()
+            .host(&self.host)
+            .username(&self.username)
+            .password(&self.password.expose_secret())
+            .port(self.port)
+            .ssl_mode(ssl_mode)
+    }
+
+    pub fn with_db(&self) -> PgConnectOptions {
+        self.without_db()
+            .database(&self.database_name)
+            .log_statements(tracing_log::log::LevelFilter::Trace)
+    }
 }
 
 pub enum Environment {
@@ -56,37 +86,8 @@ impl TryFrom<String> for Environment {
     }
 }
 
-impl DatabaseSettings {
-    pub fn connection_string(&self) -> Secret<String> {
-        Secret::new(format!(
-            "postgres://{}:{}@{}:{}/{}",
-            self.username,
-            self.password.expose_secret(),
-            self.host,
-            self.port,
-            self.database_name
-        ))
-    }
-
-    pub fn connection_string_without_db(&self) -> Secret<String> {
-        Secret::new(format!(
-            "postgres://{}:{}@{}:{}",
-            self.username,
-            self.password.expose_secret(),
-            self.host,
-            self.port
-        ))
-    }
-}
-
 pub fn get_configuration() -> Result<Settings, ConfigError> {
     // Initialize our configuration reader
-    // let settings = Config::builder()
-    //     // Add configuration values from yaml file.
-    //     .add_source(File::new("configuration.yaml", FileFormat::Yaml))
-    //     .build()?;
-    // // Try to convert it into settings type.
-    // settings.try_deserialize::<Settings>()
     let base_path = std::env::current_dir()
         .expect("Failed to determine current directory.");
     let configuration_directory = base_path.join("configuration");
@@ -97,12 +98,17 @@ pub fn get_configuration() -> Result<Settings, ConfigError> {
         .try_into()
         .expect("Failed to parse APP_ENVIRONMENT.");
     let environment_filename = format!("{}.yaml", environment.as_str());
-
     let settings = Config::builder()
         .add_source(File::from(configuration_directory.join("base.yaml")))
         .add_source(File::from(
             configuration_directory.join(environment_filename),
         ))
+        // E.g. APP_APPLICATION_PORT=5001 sets Settings.application.port.
+        .add_source(
+            config::Environment::with_prefix("APP")
+                .prefix_separator("_")
+                .separator("__"),
+        )
         .build()?;
 
     settings.try_deserialize::<Settings>()

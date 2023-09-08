@@ -1,2 +1,5 @@
 application:
-  host: 0.0.0.0
+  host: 0.0.0.0 
+database:
+  # Fly IO encrypts everything from app - db, so SSL is not required.
+  require_ssl: false
