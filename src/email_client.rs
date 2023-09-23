@@ -75,7 +75,7 @@ impl EmailClient {
                 },
             ]),
         };
-        let builder = self
+        let _builder = self
             .http_client
             .post(url)
             .bearer_auth(self.authorization_token.expose_secret())
