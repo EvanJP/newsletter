@@ -2,6 +2,7 @@ use std::net::TcpListener;
 
 use newsletter::configuration::get_configuration;
 use newsletter::configuration::DatabaseSettings;
+use newsletter::email_client::EmailClient;
 use newsletter::startup::run;
 use newsletter::telemetry::get_subscriber;
 use newsletter::telemetry::init_subscriber;
@@ -10,6 +11,7 @@ use sqlx::Connection;
 use sqlx::Executor;
 use sqlx::PgConnection;
 use sqlx::PgPool;
+use url::Url;
 use uuid::Uuid;
 
 static TRACING: Lazy<()> = Lazy::new(|| {
@@ -71,8 +73,17 @@ async fn spawn_app() -> TestApp {
     let db_pool = configure_database(&config.database).await;
 
     let address = format!("http://127.0.0.1:{}", port);
-    let server =
-        run(listener, db_pool.clone()).expect("Failed to bind address");
+    let sender_email = config
+        .email_client
+        .sender()
+        .expect("Invalid sender email address.");
+    let email_client = EmailClient::new(
+        Url::parse(config.email_client.base_url.as_str()).unwrap(),
+        sender_email,
+        config.email_client.authorization_token,
+    );
+    let server = run(listener, db_pool.clone(), email_client)
+        .expect("Failed to bind address");
     let _ = tokio::spawn(server);
     TestApp { address, db_pool }
 }
@@ -150,6 +161,35 @@ async fn subscribe_returns_400_for_missing_data() {
             response.status().as_u16(),
             "The API did not fail with 400 Bad Request with payload {}.",
             error_message
+        );
+    }
+}
+
+#[tokio::test]
+async fn subscribe_returns_a_400_when_fields_are_invalid() {
+    // Arrange
+    let app = spawn_app().await;
+    let client = reqwest::Client::new();
+    let test_cases = vec![
+        ("name=&email=ursula_le_guin%40gmail.com", "empty name"),
+        ("name=Ursula&email=", "empty email"),
+        ("name=Ursula&email=definitely-not-an-email", "invalid email"),
+    ];
+    for (body, description) in test_cases {
+        // Act
+        let response = client
+            .post(&format!("{}/subscriptions", &app.address))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(body)
+            .send()
+            .await
+            .expect("Failed to execute request.");
+
+        assert_eq!(
+            400,
+            response.status().as_u16(),
+            "The API did not return 400 when payload was {}.",
+            description
         );
     }
 }

@@ -3,3 +3,6 @@ application:
 database:
   # Fly IO encrypts everything from app - db, so SSL is not required.
   require_ssl: false
+email_client:
+  base_url: "https://api.sendgrid.com/v3/mail/send"
+  sender_email: "evanp1999@gmail.com"

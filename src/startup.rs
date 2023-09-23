@@ -7,15 +7,18 @@ use actix_web::HttpServer;
 use sqlx::PgPool;
 use tracing_actix_web::TracingLogger;
 
+use crate::email_client::EmailClient;
 use crate::routes::health_check;
 use crate::routes::subscribe;
 
 pub fn run(
     listener: TcpListener,
     db_pool: PgPool,
+    email_client: EmailClient,
 ) -> Result<Server, std::io::Error> {
     // Arc returned.
     let connection = web::Data::new(db_pool);
+    let email_client = web::Data::new(email_client);
     // Need to move connection in since the closure will outlive the connection
     // lifetime.
     let server = HttpServer::new(move || {
@@ -25,6 +28,7 @@ pub fn run(
             .route("/subscriptions", web::post().to(subscribe))
             // Add a count to the arc.
             .app_data(connection.clone())
+            .app_data(email_client.clone())
     })
     .listen(listener)?
     .run();
