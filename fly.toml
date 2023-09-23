@@ -6,9 +6,6 @@
 app = "hidden-water-4767"
 primary_region = "ewr"
 
-# kill_signal = "SIGINT" 
-# kill_timeout = 5
-
 [build]
 dockerfile = "Dockerfile"
 ignorefile = ".dockerignore"
@@ -23,9 +20,6 @@ auto_start_machines = true
 min_machines_running = 0
 processes = ["app"]
 
-# [deploy]
-# release_command="./sqlx migrate run"
-
 # [[http_service.checks]]
 # grace_period = "10s"
 # internal = "30s"
@@ -38,4 +32,3 @@ APP_DATABASE__DATABASE_NAME = "hidden_water_4767"
 APP_DATABASE__HOST = "weathered-night-4108.flycast"
 APP_DATABASE__PORT = "5432"
 APP_DATABASE__USERNAME = "hidden_water_4767"
-# APP_DATABASE__PASSWORD = "in `fly secret`"
