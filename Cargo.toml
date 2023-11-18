@@ -1,14 +1,14 @@
 [package]
+edition = "2021"
 name = "newsletter"
 version = "0.1.0"
-edition = "2021"
 
 [lib]
 path = "src/lib.rs"
 
 [[bin]]
-path = "src/main.rs"
 name = "newsletter"
+path = "src/main.rs"
 
 [profile.release]
 # See https://github.com/johnthagen/min-sized-rust#strip-symbols-from-binary
@@ -25,10 +25,14 @@ panic = "abort"
 
 [dependencies]
 actix-web = "4.3.1"
+anyhow = "1.0.75"
+argon2 = {version = "0.5.2", features = ["std"] }
+base64 = "0.21.5"
 chrono = { version = "0.4.26", default-features = false, features = ["clock"] }
 config = "0.13.3"
 env_logger = "0.10.0"
 log = "0.4.20"
+rand = { version = "0.8.5", features = ["std_rng"] }
 reqwest = { version = "0.11.18", default-features = false, features = [
     "json",
     "rustls-tls",
@@ -37,21 +41,22 @@ secrecy = { version = "0.8.0", features = ["serde"] }
 serde = { version = "1.0.183", features = ["derive"] }
 serde-aux = "4.2.0"
 sqlx = { version = "0.7.1", default_features = false, features = [
-    "runtime-tokio-rustls",
-    "macros",
-    "postgres",
-    "uuid",
     "chrono",
+    "macros",
     "migrate",
+    "postgres",
+    "runtime-tokio-rustls",
+    "uuid",
 ] }
+thiserror = "1.0.49"
 tokio = { version = "1.32.0", features = ["macros", "rt-multi-thread"] }
 tracing = { version = "0.1.37", features = ["log"] }
 tracing-actix-web = "0.7.6"
 tracing-bunyan-formatter = "0.3.9"
 tracing-log = "0.1.3"
 tracing-subscriber = { version = "0.3.17", features = [
-    "registry",
     "env-filter",
+    "registry",
 ] }
 unicode-segmentation = "1.10.1"
 uuid = { version = "1.4.1", features = ["v4"] }
@@ -60,6 +65,7 @@ validator = "0.16.1"
 [dev-dependencies]
 claym = "0.5.1"
 fake = "2.8.0"
+linkify = "0.10.0"
 once_cell = "1.18.0"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
