@@ -1,10 +1,14 @@
 use serde::Serialize;
 use validator::validate_email;
 
+/// Email holder type to prevent bad emails from falling through.
 #[derive(Debug, Clone, Serialize)]
 pub struct SubscriberEmail(String);
 
 impl SubscriberEmail {
+    /// Parses the given email to make sure the email is valid.
+    ///
+    /// Uses [`validator::validate_email`] for validation.
     pub fn parse(s: String) -> Result<SubscriberEmail, String> {
         if validate_email(&s) {
             Ok(Self(s))
@@ -20,10 +24,15 @@ impl AsRef<str> for SubscriberEmail {
     }
 }
 
+impl std::fmt::Display for SubscriberEmail {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use claym::assert_err;
-    // use claym::assert_ok;
     use fake::faker::internet::en::SafeEmail;
     use fake::Fake;
     use rand::rngs::StdRng;
