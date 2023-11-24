@@ -43,3 +43,6 @@ BEGIN;
     ALTER TABLE subscriptions ALTER COLUMN status SET NOT NULL;
 COMMIT;
 ```
+
+## To run SQLX on fly:
+- Proxy with `fly proxy 15432:5432 -a <pg name>` then psql into it.
