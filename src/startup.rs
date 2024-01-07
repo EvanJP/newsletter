@@ -1,11 +1,16 @@
 //! For actually running the application.
 use std::net::TcpListener;
 
+use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::web;
 use actix_web::App;
 use actix_web::HttpServer;
+use actix_web_flash_messages::storage::CookieMessageStore;
+use actix_web_flash_messages::FlashMessagesFramework;
 use reqwest::Url;
+use secrecy::ExposeSecret;
+use secrecy::Secret;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_actix_web::TracingLogger;
@@ -15,6 +20,9 @@ use crate::configuration::Settings;
 use crate::email_client::EmailClient;
 use crate::routes::confirm;
 use crate::routes::health_check;
+use crate::routes::home;
+use crate::routes::login;
+use crate::routes::login_form;
 use crate::routes::publish_newsletter;
 use crate::routes::subscribe;
 
@@ -28,6 +36,9 @@ pub fn get_connection_pool(config: &DatabaseSettings) -> PgPool {
 /// Wrapper type for retrieving URL. Context-retrieval in actix-web is type
 /// based, avoiding raw `String`s is advisable.
 pub struct ApplicationBaseUrl(pub String);
+
+#[derive(Clone, Debug)]
+pub struct HmacSecret(pub Secret<String>);
 
 /// The main app function.
 ///
@@ -52,16 +63,27 @@ pub fn run(
     db_pool: PgPool,
     email_client: EmailClient,
     base_url: String,
+    hmac_secret: Secret<String>,
 ) -> Result<Server, std::io::Error> {
     // Arc returned.
     let connection = web::Data::new(db_pool);
     let email_client = web::Data::new(email_client);
     let base_url = web::Data::new(ApplicationBaseUrl(base_url));
+    let message_store = CookieMessageStore::builder(Key::from(
+        hmac_secret.expose_secret().as_bytes(),
+    ))
+    .build();
+    let message_framework =
+        FlashMessagesFramework::builder(message_store).build();
     // Need to move connection in since the closure will outlive the connection
     // lifetime.
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
+            .wrap(message_framework.clone())
+            .route("/", web::get().to(home))
+            .route("/login", web::get().to(login_form))
+            .route("/login", web::post().to(login))
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
             .route("/subscriptions/confirm", web::get().to(confirm))
@@ -69,6 +91,7 @@ pub fn run(
             .app_data(connection.clone())
             .app_data(email_client.clone())
             .app_data(base_url.clone())
+            .app_data(web::Data::new(HmacSecret(hmac_secret.clone())))
     })
     .listen(listener)?
     .run();
@@ -109,12 +132,12 @@ impl Application {
         );
         let listener = TcpListener::bind(address)?;
         let port = listener.local_addr().unwrap().port();
-
         let server = run(
             listener,
             connection_pool,
             email_client,
             config.application.base_url,
+            config.application.hmac_secret,
         )?;
 
         Ok(Self { port, server })
