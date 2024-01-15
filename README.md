@@ -3,14 +3,40 @@
 ![Main CI Workflow](https://github.com/EvanJP/newsletter/actions/workflows/main.yml/badge.svg)
 ![Audit CI Workflow](https://github.com/EvanJP/newsletter/actions/workflows/audit.yml/badge.svg)
 
-## To-Do
+A simple newsletter API built on [Actix](https://actix.rs/), using the
+[Sendgrid API](https://sendgrid.com/en-us).
 
-- [ ] Make CI/CD integration with fly. https://fly.io/docs/reference/configuration/
+## Features
+
+- Completely built with Rust w/ Postgres + Docker + Fly.io support.
+- Full unit/integration testing.
+- API for registering/sending/monitoring newsletter subscriptions.
+- Argon2 based authentication.
+- Full Tracing Logging with [`tracing`](https://docs.rs/tracing/latest/tracing/).
+- HMAC secrecy for query params.
+- (Almost) Fully Documented.
+
+## API
+
+- `/`
+  - To the home page.
+- `/login`
+  - To the login form.
+- `/health_check`
+  - A HTTP 200 health check.
+- `/subscriptions`
+  - A `POST` to subscribe to the newsletter.
+- `/subscriptions/confirm`
+  - Confirming subscriptions.
+- `/newsletters`
+  - A `POST` to send out newsletters to anyone who is a confirmed subscriber.
 
 ## Commands
 
+- `cargo test`
+  - Runs all the integration testing and unit tests.
 - `./scripts/init_db.sh`
-  - Starts up the Postgres docker container.
+  - Starts up the local Postgres docker container.
   - `docker stop <container_id>`
 - `cargo sqlx prepare -- --lib`
   - Generates Sqlx Offline Mode files.
@@ -45,4 +71,5 @@ COMMIT;
 ```
 
 ## To run SQLX on fly:
+
 - Proxy with `fly proxy 15432:5432 -a <pg name>` then psql into it.

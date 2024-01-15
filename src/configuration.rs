@@ -25,12 +25,15 @@ pub struct Settings {
 /// * `port` - The port number.
 /// * `host` - The host string.
 /// * `base_url` - The url of this API to send requests to.
+/// * `hmac_secret` - The [HMAC](https://en.wikipedia.org/wiki/HMAC) secret to
+///   be appeneded to query params.
 #[derive(Deserialize, Clone)]
 pub struct ApplicationSettings {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
     pub base_url: String,
+    pub hmac_secret: Secret<String>,
 }
 
 /// The Postgres database settings for the app.
