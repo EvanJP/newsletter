@@ -6,6 +6,8 @@
 A simple newsletter API built on [Actix](https://actix.rs/), using the
 [Sendgrid API](https://sendgrid.com/en-us).
 
+Docs available at http://evanjp.github.io/newsletter
+
 ## Features
 
 - Completely built with Rust w/ Postgres + Docker + Fly.io support.
