@@ -35,6 +35,8 @@ A simple newsletter API built on [Actix](https://actix.rs/), using the
 
 - `cargo test`
   - Runs all the integration testing and unit tests.
+- `cargo doc --open`
+  - Generate the documentation and opens it.
 - `./scripts/init_db.sh`
   - Starts up the local Postgres docker container.
   - `docker stop <container_id>`
