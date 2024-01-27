@@ -1,0 +1,4 @@
+(function() {var implementors = {
+"actix_web":[],
+"newsletter":[["impl <a class=\"trait\" href=\"actix_web/error/response_error/trait.ResponseError.html\" title=\"trait actix_web::error::response_error::ResponseError\">ResponseError</a> for <a class=\"enum\" href=\"newsletter/routes/enum.SubscribeError.html\" title=\"enum newsletter::routes::SubscribeError\">SubscribeError</a>"],["impl <a class=\"trait\" href=\"actix_web/error/response_error/trait.ResponseError.html\" title=\"trait actix_web::error::response_error::ResponseError\">ResponseError</a> for <a class=\"enum\" href=\"newsletter/routes/enum.PublishError.html\" title=\"enum newsletter::routes::PublishError\">PublishError</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

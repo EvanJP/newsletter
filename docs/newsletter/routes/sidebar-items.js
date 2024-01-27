@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["PublishError","SubscribeError"],"fn":["confirm","confirm_subscriber","error_chain_fmt","get_subscriber_id_from_token","health_check","home","login","login_form","publish_newsletter","send_confirmation_email","store_token","subscribe"],"struct":["BodyData","Content","FormData","Parameters","StoreTokenError"],"trait":["IntoHttpError"]};

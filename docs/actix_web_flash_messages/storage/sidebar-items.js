@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["LoadError","StoreError"],"struct":["CookieMessageStore","CookieMessageStoreBuilder"],"trait":["FlashMessageStore"]};

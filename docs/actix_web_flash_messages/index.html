@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Flash Messages for `actix-web`"><title>actix_web_flash_messages - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="actix_web_flash_messages" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.1 (eb26296b5 2023-08-03)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../actix_web_flash_messages/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../actix_web_flash_messages/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate actix_web_flash_messages</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.4.2</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">actix_web_flash_messages</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/actix_web_flash_messages/lib.rs.html#1-11">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="flash-messages-for-actix-web"><a href="#flash-messages-for-actix-web">Flash Messages for <code>actix-web</code></a></h2>
+<p>Web applications sometimes need to show a <strong>one-time notification</strong> to the user - e.g. an error message after having failed to login.<br />
+These notifications are commonly called <strong>flash messages</strong>.</p>
+<p><code>actix-web-flash-messages</code> provides a framework to work with flash messages in <code>actix-web</code>, closely modeled after <a href="https://docs.djangoproject.com/en/3.2/ref/contrib/messages/#module-django.contrib.messages">Django’s message framework</a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>actix_web::{Responder, HttpResponse, get,http};
+<span class="kw">use </span>actix_web_flash_messages::{
+    FlashMessage, IncomingFlashMessages,
+};
+<span class="kw">use </span>std::fmt::Write;
+
+<span class="doccomment">/// Attach two flash messages to the outgoing response,
+/// a redirect.
+</span><span class="attr">#[get(<span class="string">&quot;/set&quot;</span>)]
+</span><span class="kw">async fn </span>set() -&gt; <span class="kw">impl </span>Responder {
+    FlashMessage::info(<span class="string">&quot;Hey there!&quot;</span>).send();
+    FlashMessage::debug(<span class="string">&quot;How is it going?&quot;</span>).send();
+    <span class="comment">// Redirect to /show
+    </span>HttpResponse::TemporaryRedirect()
+        .insert_header((http::header::LOCATION, <span class="string">&quot;/show&quot;</span>))
+        .finish()
+}
+
+<span class="doccomment">/// Pick up the flash messages attached to the request, showing
+/// them to the user via the request body.
+</span><span class="attr">#[get(<span class="string">&quot;/show&quot;</span>)]
+</span><span class="kw">async fn </span>show(messages: IncomingFlashMessages) -&gt; <span class="kw">impl </span>Responder {
+    <span class="kw">let </span><span class="kw-2">mut </span>body = String::new();
+    <span class="kw">for </span>message <span class="kw">in </span>messages.iter() {
+        <span class="macro">writeln!</span>(body, <span class="string">&quot;{} - {}&quot;</span>, message.content(), message.level()).unwrap();
+    }
+    HttpResponse::Ok().body(body)
+}</code></pre></div>
+<h3 id="how-to-install"><a href="#how-to-install">How to install</a></h3>
+<p>Add <code>actix-web-flash-messages</code> to your dependencies:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+# ...
+actix-web = &quot;4&quot;
+actix-web-flash-messages = &quot;0.4&quot;
+</code></pre></div>
+<p>By default, <code>actix-web-flash-messages</code> does not provide any storage backend to receive and send flash messages.<br />
+You can enable:</p>
+<ul>
+<li>a cookie-based one, <a href="storage/struct.CookieMessageStore.html" title="struct actix_web_flash_messages::storage::CookieMessageStore"><code>storage::CookieMessageStore</code></a>, using the <code>cookies</code> feature flag. The cookie store uses a signed cookie to store and retrieve messages;</li>
+</ul>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+# ...
+actix-web-flash-messages = { version = &quot;0.4&quot;, features = [&quot;cookies&quot;] }
+</code></pre></div>
+<ul>
+<li>a session-based one, [<code>storage::SessionMessageStore</code>], using the <code>sessions</code> feature flag. The session store attaches flash messages to the current session.</li>
+</ul>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+# ...
+actix-web-flash-messages = { version = &quot;0.4&quot;, features = [&quot;sessions&quot;] }
+</code></pre></div>
+<p>You can provide a different message store by implementing the <a href="storage/trait.FlashMessageStore.html" title="trait actix_web_flash_messages::storage::FlashMessageStore"><code>storage::FlashMessageStore</code></a> trait.</p>
+<h3 id="examples"><a href="#examples">Examples</a></h3>
+<p>You can find examples of application using <code>actix-web-flash-messages</code> on GitHub:</p>
+<ul>
+<li><a href="https://github.com/LukeMathWalker/actix-web-flash-messages/tree/main/examples/cookies">cookies</a>;</li>
+<li><a href="https://github.com/LukeMathWalker/actix-web-flash-messages/tree/main/examples/session-cookie">cookie-based sessions</a>;</li>
+<li><a href="https://github.com/LukeMathWalker/actix-web-flash-messages/tree/main/examples/session-redis">Redis-based sessions</a>.</li>
+</ul>
+<h3 id="the-structure-of-a-flash-message"><a href="#the-structure-of-a-flash-message">The Structure of a Flash Message</a></h3>
+<p><a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>s are made of a <a href="enum.Level.html" title="enum actix_web_flash_messages::Level"><code>Level</code></a> and a string of content.</p>
+<p>The message level can be used for filtering and rendering - for example:</p>
+<ul>
+<li>Only show flash messages at <code>info</code> level or above in a production environment, while retaining <code>debug</code> level messages for local development; </li>
+<li>Use different colours, in the UI, to display messages (e.g. red for errors, orange for warnings, etc.);</li>
+</ul>
+<p>You can build a <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a> via <a href="struct.FlashMessage.html#method.new" title="associated function actix_web_flash_messages::FlashMessage::new"><code>FlashMessage::new</code></a> by specifying its content and <a href="enum.Level.html" title="enum actix_web_flash_messages::Level"><code>Level</code></a>.<br />
+You can also use the shorter level-based constructors - e.g. <a href="struct.FlashMessage.html#method.info" title="associated function actix_web_flash_messages::FlashMessage::info"><code>FlashMessage::info</code></a>.</p>
+<h3 id="enabling-flash-messages"><a href="#enabling-flash-messages">Enabling Flash Messages</a></h3>
+<p>To start sending and receiving flash messages you need to register <a href="struct.FlashMessagesFramework.html" title="struct actix_web_flash_messages::FlashMessagesFramework"><code>FlashMessagesFramework</code></a> as a middleware on your <code>actix_web</code>’s <code>App</code>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>actix_web_flash_messages::{FlashMessagesFramework, storage::CookieMessageStore};
+<span class="kw">use </span>actix_web::{HttpServer, App, web};
+<span class="kw">use </span>actix_web::cookie::Key;
+
+<span class="attr">#[actix_web::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span>signing_key = Key::generate(); <span class="comment">// This will usually come from configuration!
+    </span><span class="kw">let </span>message_store = CookieMessageStore::builder(signing_key).build();
+    <span class="kw">let </span>message_framework = FlashMessagesFramework::builder(message_store).build();
+    
+    HttpServer::new(<span class="kw">move </span>|| {
+        App::new()
+            .wrap(message_framework.clone())
+            <span class="comment">// [...] your endpoints
+    </span>})
+}</code></pre></div>
+<p>You will then be able to:</p>
+<ul>
+<li>extract <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>s from incoming requests using the <a href="struct.IncomingFlashMessages.html" title="struct actix_web_flash_messages::IncomingFlashMessages"><code>IncomingFlashMessages</code></a> extractor;</li>
+<li>send <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>s alongside the outgoing response using <a href="struct.FlashMessage.html#method.send" title="method actix_web_flash_messages::FlashMessage::send"><code>FlashMessage::send</code></a>.</li>
+</ul>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>actix_web::{Responder, HttpResponse, get};
+<span class="kw">use </span>actix_web_flash_messages::{
+    FlashMessage, IncomingFlashMessages,
+};
+
+<span class="doccomment">/// Send a flash messages alongside the outgoing response, a redirect.
+</span><span class="attr">#[get(<span class="string">&quot;/set&quot;</span>)]
+</span><span class="kw">async fn </span>set() -&gt; <span class="kw">impl </span>Responder {
+    FlashMessage::info(<span class="string">&quot;Hey there!&quot;</span>).send();
+    <span class="comment">// [...]
+</span>}
+
+<span class="doccomment">/// Extract the flash message from the incoming request.
+</span><span class="attr">#[get(<span class="string">&quot;/show&quot;</span>)]
+</span><span class="kw">async fn </span>show(_messages: IncomingFlashMessages) -&gt; <span class="kw">impl </span>Responder {
+    <span class="comment">// [...]
+</span>}</code></pre></div>
+<h3 id="framework-configuration"><a href="#framework-configuration">Framework Configuration</a></h3>
+<p>There are a few knobs that you can tweak when it comes to <a href="struct.FlashMessagesFramework.html" title="struct actix_web_flash_messages::FlashMessagesFramework"><code>FlashMessagesFramework</code></a>.<br />
+Use <a href="struct.FlashMessagesFramework.html#method.builder" title="associated function actix_web_flash_messages::FlashMessagesFramework::builder"><code>FlashMessagesFramework::builder</code></a> to get access to its fluent configuration API, built around <a href="struct.FlashMessagesFrameworkBuilder.html" title="struct actix_web_flash_messages::FlashMessagesFrameworkBuilder"><code>FlashMessagesFrameworkBuilder</code></a>.</p>
+<h4 id="minimum-level"><a href="#minimum-level">Minimum Level</a></h4>
+<p>By default, <a href="struct.FlashMessagesFramework.html" title="struct actix_web_flash_messages::FlashMessagesFramework"><code>FlashMessagesFramework</code></a> will only dispatch messages at <code>info</code>-level or above, discarding <code>debug</code>-level messages.<br />
+You can change this setting using <a href="struct.FlashMessagesFrameworkBuilder.html#method.minimum_level" title="method actix_web_flash_messages::FlashMessagesFrameworkBuilder::minimum_level"><code>FlashMessagesFrameworkBuilder::minimum_level</code></a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>actix_web_flash_messages::{FlashMessagesFramework, Level, storage::CookieMessageStore};
+<span class="kw">use </span>actix_web::{HttpServer, App, web};
+
+<span class="kw">fn </span>get_message_store() -&gt; CookieMessageStore {
+    <span class="comment">// [...]
+</span>}
+
+<span class="attr">#[actix_web::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Show debug-level messages when developing locally
+    </span><span class="kw">let </span>minimum_level = <span class="kw">match </span>std::env::var(<span class="string">&quot;APP_ENV&quot;</span>) {
+        <span class="prelude-val">Ok</span>(s) <span class="kw">if </span><span class="kw-2">&amp;</span>s == <span class="string">&quot;local&quot; </span>=&gt; Level::Debug,
+        <span class="kw">_ </span>=&gt; Level::Info,
+    };
+    <span class="kw">let </span>message_framework = FlashMessagesFramework::builder(get_message_store())
+        .minimum_level(minimum_level)
+        .build();
+
+    HttpServer::new(<span class="kw">move </span>|| {
+        App::new()
+            .wrap(message_framework.clone())
+            <span class="comment">// [...] Your endpoints
+    </span>})
+}</code></pre></div>
+<h3 id="license"><a href="#license">License</a></h3>
+<p>Licensed under either of Apache License, Version 2.0 or MIT license at your option. Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this crate by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.</p>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="storage/index.html" title="mod actix_web_flash_messages::storage">storage</a></div><div class="desc docblock-short">Pluggable storage backends for flash messages.</div></li></ul><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage">FlashMessage</a></div><div class="desc docblock-short">A <strong>one-time</strong> user notification.</div></li><li><div class="item-name"><a class="struct" href="struct.FlashMessagesFramework.html" title="struct actix_web_flash_messages::FlashMessagesFramework">FlashMessagesFramework</a></div><div class="desc docblock-short"><code>actix-web</code> middleware providing support for sending and receiving <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>s.</div></li><li><div class="item-name"><a class="struct" href="struct.FlashMessagesFrameworkBuilder.html" title="struct actix_web_flash_messages::FlashMessagesFrameworkBuilder">FlashMessagesFrameworkBuilder</a></div><div class="desc docblock-short">A fluent builder to construct a <a href="struct.FlashMessagesFramework.html" title="struct actix_web_flash_messages::FlashMessagesFramework"><code>FlashMessagesFramework</code></a> instance.</div></li><li><div class="item-name"><a class="struct" href="struct.IncomingFlashMessages.html" title="struct actix_web_flash_messages::IncomingFlashMessages">IncomingFlashMessages</a></div><div class="desc docblock-short">An <code>actix-web</code> extractor to retrieve <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>s attached to an incoming request.</div></li></ul><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><ul class="item-table"><li><div class="item-name"><a class="enum" href="enum.Level.html" title="enum actix_web_flash_messages::Level">Level</a></div><div class="desc docblock-short">The severity level of a <a href="struct.FlashMessage.html" title="struct actix_web_flash_messages::FlashMessage"><code>FlashMessage</code></a>.</div></li></ul></section></div></main></body></html>

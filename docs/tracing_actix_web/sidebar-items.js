@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["root_span"],"struct":["DefaultRootSpanBuilder","Level","RequestId","RootSpan","TracingLogger"],"trait":["RootSpanBuilder"]};
