@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`tracing-bunyan-formatter` provides two `Layer`s implementation to be used on top of a `tracing` `Subscriber`:"><title>tracing_bunyan_formatter - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-f3501f0f5ae15dfb.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="tracing_bunyan_formatter" data-themes="" data-resource-suffix="" data-rustdoc-version="1.71.1 (eb26296b5 2023-08-03)" data-search-js="search-4926e5fc22a5646a.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-f0540c1d82cde29b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../tracing_bunyan_formatter/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../tracing_bunyan_formatter/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate tracing_bunyan_formatter</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.3.9</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">tracing_bunyan_formatter</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/tracing_bunyan_formatter/lib.rs.html#1-8">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h1 align="center">tracing-bunyan-formatter</h1>
+<div align="center">
+ <strong>
+   Bunyan formatting for tokio-rs/tracing.
+ </strong>
+</div>
+<br />
+<div align="center">
+  <!-- Crates version -->
+  <a href="https://crates.io/crates/tracing-bunyan-formatter">
+    <img src="https://img.shields.io/crates/v/tracing-bunyan-formatter.svg?style=flat-square"
+    alt="Crates.io version" />
+  </a>
+  <!-- Downloads -->
+  <a href="https://crates.io/crates/tracing-bunyan-formatter">
+    <img src="https://img.shields.io/crates/d/tracing-bunyan-formatter.svg?style=flat-square"
+      alt="Download" />
+  </a>
+  <!-- docs.rs docs -->
+  <a href="https://docs.rs/tracing-bunyan-formatter">
+    <img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square"
+      alt="docs.rs docs" />
+  </a>
+  <!-- CI -->
+  <a href="https://github.com/LukeMathWalker/tracing-bunyan-formatter">
+    <img src="https://circleci.com/gh/LukeMathWalker/tracing-bunyan-formatter.svg?style=shield" alt="CircleCI badge" />
+  </a>
+</div>
+<br/>
+<p><code>tracing-bunyan-formatter</code> provides two <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/layer/trait.Layer.html"><code>Layer</code></a>s implementation to be used on top of
+a <a href="https://docs.rs/tracing"><code>tracing</code></a> <a href="https://docs.rs/tracing-core/0.1.10/tracing_core/subscriber/trait.Subscriber.html"><code>Subscriber</code></a>:</p>
+<ul>
+<li><a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorageLayer.html"><code>JsonStorageLayer</code></a>, to attach contextual information to spans for ease of consumption by
+downstream <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/layer/trait.Layer.html"><code>Layer</code></a>s, via <a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorage.html"><code>JsonStorage</code></a> and <a href="https://docs.rs/tracing/0.1.13/tracing/struct.Span.html"><code>Span</code></a>’s <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/registry/struct.ExtensionsMut.html"><code>extensions</code></a>;</li>
+<li><a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.BunyanFormattingLayer.html"><code>BunyanFormattingLayer</code></a>, which emits a <a href="https://github.com/trentm/node-bunyan">bunyan</a>-compatible formatted record upon entering a span,
+exiting a span and event creation.</li>
+</ul>
+<p><strong>Important</strong>: each span will inherit all fields and properties attached to its parent - this is
+currently not the behaviour provided by <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/fmt/struct.Layer.html"><code>tracing_subscriber::fmt::Layer</code></a>.</p>
+<h3 id="example"><a href="#example">Example</a></h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
+<span class="kw">use </span>tracing::instrument;
+<span class="kw">use </span>tracing::info;
+<span class="kw">use </span>tracing_subscriber::Registry;
+<span class="kw">use </span>tracing_subscriber::layer::SubscriberExt;
+
+<span class="attr">#[instrument]
+</span><span class="kw">pub fn </span>a_unit_of_work(first_parameter: u64) {
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">2 </span>{
+        a_sub_unit_of_work(i);
+    }
+    <span class="macro">info!</span>(excited = <span class="string">&quot;true&quot;</span>, <span class="string">&quot;Tracing is quite cool!&quot;</span>);
+}
+
+<span class="attr">#[instrument]
+</span><span class="kw">pub fn </span>a_sub_unit_of_work(sub_parameter: u64) {
+    <span class="macro">info!</span>(<span class="string">&quot;Events have the full context of their parent span!&quot;</span>);
+}
+
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span>formatting_layer = BunyanFormattingLayer::new(<span class="string">&quot;tracing_demo&quot;</span>.into(), std::io::stdout);
+    <span class="kw">let </span>subscriber = Registry::default()
+        .with(JsonStorageLayer)
+        .with(formatting_layer);
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+
+    <span class="macro">info!</span>(<span class="string">&quot;Orphan event without a parent span&quot;</span>);
+    a_unit_of_work(<span class="number">2</span>);
+}</code></pre></div>
+<h3 id="console-output"><a href="#console-output">Console output</a></h3><div>
+<img src="https://raw.githubusercontent.com/LukeMathWalker/tracing-bunyan-formatter/master/images/ConsoleOutput.png" />
+</div>
+<hr/>
+<p>If you pipe the output in the <a href="https://github.com/trentm/node-bunyan"><code>bunyan</code></a> CLI:</p>
+<div>
+<img src="https://raw.githubusercontent.com/LukeMathWalker/tracing-bunyan-formatter/master/images/ConsoleBunyanOutput.png" />
+</div>
+<hr/>
+<p>As a pure-Rust alternative check out the <a href="https://crates.io/crates/bunyan"><code>bunyan</code> crate</a>.
+It includes a CLI binary with similar functionality to the original <code>bunyan</code> CLI written in
+JavaScript.</p>
+<h3 id="implementation-strategy"><a href="#implementation-strategy">Implementation strategy</a></h3>
+<p>The layered approach we have pursued is not necessarily the most efficient,
+but it makes it easier to separate different concerns and re-use common logic across multiple <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/layer/trait.Layer.html"><code>Layer</code></a>s.</p>
+<p>While the current crate has no ambition to provide any sort of general purpose framework on top of
+<a href="https://docs.rs/tracing-subscriber"><code>tracing-subscriber</code></a>’s <a href="https://docs.rs/tracing-subscriber/0.2.5/tracing_subscriber/layer/trait.Layer.html"><code>Layer</code></a> trait, the information collected by <a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorageLayer.html"><code>JsonStorageLayer</code></a> can be leveraged via
+its public API by other downstream layers outside of this crate whose main concern is formatting.
+It significantly lowers the amount of complexity you have to deal with if you are interested
+in implementing your own formatter, for whatever reason or purpose.</p>
+<p>You can also add another enrichment layer following the <a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorageLayer.html"><code>JsonStorageLayer</code></a> to collect
+additional information about each span and store it in <a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorage.html"><code>JsonStorage</code></a>.
+We could have pursued this compositional approach to add <code>elapsed_milliseconds</code> to each span
+instead of baking it in <a href="https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/struct.JsonStorage.html"><code>JsonStorage</code></a> itself.</p>
+<h3 id="optional-features"><a href="#optional-features">Optional features</a></h3>
+<p>You can enable the <code>arbitrary_precision</code> feature to handle numbers of arbitrary size losslessly. Be aware of a <a href="https://github.com/LukeMathWalker/tracing-bunyan-formatter/issues/4">known issue with untagged deserialization</a>.</p>
+<h4 id="valuable"><a href="#valuable"><code>valuable</code></a></h4>
+<p>The <code>tracing</code> crate has an unstable feature <code>valuable</code> to enable
+recording custom composite types like <code>struct</code>s and <code>enum</code>s. Custom
+types must implement the <a href="https://crates.io/crates/valuable"><code>valuable</code>
+crate</a>’s <code>Valuable</code> trait, which
+can be derived with a macro.</p>
+<p>To use <code>tracing</code> and <code>tracing-bunyan-formatter</code> with <code>valuable</code>, you must set the following configuration in your binary (as of the current crate versions on 2023-03-29):</p>
+<ol>
+<li>
+<p>Enable the feature flag <code>valuable</code> for the <code>tracing</code> dependency.</p>
+</li>
+<li>
+<p>Add the <code>--cfg tracing_unstable</code> arguments to your rustc
+flags (see <a href="https://docs.rs/tracing/0.1.37/tracing/index.html#unstable-features"><code>tracing</code>’s documentation on this</a>).
+This can be done in a few ways:</p>
+<ol>
+<li>
+<p>Adding the arguments to your binary package’s
+<code>.cargo/config.toml</code> under <code>build.rustflags</code>. See the
+<a href="https://doc.rust-lang.org/cargo/reference/config.html#buildrustflags"><code>cargo</code> config reference documentation</a>).</p>
+<p>Example:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[build]
+rustflags = &quot;--cfg tracing_unstable&quot;
+</code></pre></div></li>
+<li>
+<p>Adding the arguments to the <code>RUSTFLAGS</code> environment variable when you
+run <code>cargo</code>. See the <a href="https://doc.rust-lang.org/cargo/reference/environment-variables.html"><code>cargo</code> environment variable
+docs</a>).</p>
+<p>Example:</p>
+<div class="example-wrap"><pre class="language-sh"><code>RUSTFLAGS=&quot;--cfg tracing_unstable&quot; cargo build
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>Enable the feature flag <code>valuable</code> for the <code>tracing-bunyan-formatter</code> dependency.</p>
+</li>
+<li>
+<p>Add dependency <code>valuable</code>.</p>
+</li>
+<li>
+<p>Optional: if you want to derive the <code>Valuable</code> trait for your
+custom types, enable the feature flag <code>derive</code> for the <code>valuable</code>
+dependency.</p>
+</li>
+</ol>
+<p>See more details in the example in <a href="examples/valuable.rs"><code>examples/valuable.rs</code></a>.</p>
+<h3 id="testing"><a href="#testing">Testing</a></h3>
+<p>Just run <code>cargo test</code>.</p>
+<p>To run extra tests with the <code>valuable</code> feature enabled, run:</p>
+<div class="example-wrap"><pre class="language-sh"><code>RUSTFLAGS=&#39;--cfg tracing_unstable&#39; \
+cargo test --target-dir target/debug_valuable --features &quot;valuable valuable/derive&quot;
+
+RUSTFLAGS=&#39;--cfg tracing_unstable&#39; \
+cargo run --example valuable --target-dir target/debug_valuable --features &quot;valuable valuable/derive&quot;
+</code></pre></div></div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.BunyanFormattingLayer.html" title="struct tracing_bunyan_formatter::BunyanFormattingLayer">BunyanFormattingLayer</a></div><div class="desc docblock-short">This layer is exclusively concerned with formatting information using the <a href="https://github.com/trentm/node-bunyan">Bunyan format</a>.
+It relies on the upstream <code>JsonStorageLayer</code> to get access to the fields attached to
+each span.</div></li><li><div class="item-name"><a class="struct" href="struct.JsonStorage.html" title="struct tracing_bunyan_formatter::JsonStorage">JsonStorage</a></div><div class="desc docblock-short"><code>JsonStorage</code> will collect information about a span when it’s created (<code>new_span</code> handler)
+or when new records are attached to it (<code>on_record</code> handler) and store it in its <code>extensions</code>
+for future retrieval from other layers interested in formatting or further enrichment.</div></li><li><div class="item-name"><a class="struct" href="struct.JsonStorageLayer.html" title="struct tracing_bunyan_formatter::JsonStorageLayer">JsonStorageLayer</a></div><div class="desc docblock-short">This layer is only concerned with information storage, it does not do any formatting or provide any output.</div></li><li><div class="item-name"><a class="struct" href="struct.SkipFieldError.html" title="struct tracing_bunyan_formatter::SkipFieldError">SkipFieldError</a></div><div class="desc docblock-short">This error will be returned in <a href="struct.BunyanFormattingLayer.html#method.skip_fields" title="method tracing_bunyan_formatter::BunyanFormattingLayer::skip_fields"><code>BunyanFormattingLayer::skip_fields</code></a> if trying to skip a core field.</div></li></ul><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><ul class="item-table"><li><div class="item-name"><a class="enum" href="enum.Type.html" title="enum tracing_bunyan_formatter::Type">Type</a></div><div class="desc docblock-short">The type of record we are dealing with: entering a span, exiting a span, an event.</div></li></ul></section></div></main></body></html>

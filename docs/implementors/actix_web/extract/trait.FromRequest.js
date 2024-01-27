@@ -1,0 +1,5 @@
+(function() {var implementors = {
+"actix_web":[],
+"actix_web_flash_messages":[["impl <a class=\"trait\" href=\"actix_web/extract/trait.FromRequest.html\" title=\"trait actix_web::extract::FromRequest\">FromRequest</a> for <a class=\"struct\" href=\"actix_web_flash_messages/struct.IncomingFlashMessages.html\" title=\"struct actix_web_flash_messages::IncomingFlashMessages\">IncomingFlashMessages</a>"]],
+"tracing_actix_web":[["impl <a class=\"trait\" href=\"actix_web/extract/trait.FromRequest.html\" title=\"trait actix_web::extract::FromRequest\">FromRequest</a> for <a class=\"struct\" href=\"tracing_actix_web/struct.RequestId.html\" title=\"struct tracing_actix_web::RequestId\">RequestId</a>"],["impl <a class=\"trait\" href=\"actix_web/extract/trait.FromRequest.html\" title=\"trait actix_web::extract::FromRequest\">FromRequest</a> for <a class=\"struct\" href=\"tracing_actix_web/struct.RootSpan.html\" title=\"struct tracing_actix_web::RootSpan\">RootSpan</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
